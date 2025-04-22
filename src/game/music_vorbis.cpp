@@ -22,6 +22,7 @@
 // This file handles music (as you might guess by the name)
 
 #include "Buzz_inc.h"
+#include "music.h"
 #include "pace.h"
 #include "sdlhelper.h"
 #include "utils.h"
