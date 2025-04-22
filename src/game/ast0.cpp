@@ -31,6 +31,7 @@
 #include "display/palettized_surface.h"
 
 #include "Buzz_inc.h"
+#include "data.h"
 #include "draw.h"
 #include "filesystem.h"
 #include "game_main.h"
