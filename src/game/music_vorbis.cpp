@@ -23,8 +23,8 @@
 
 #include "Buzz_inc.h"
 #include "pace.h"
-#include "utils.h"
 #include "sdlhelper.h"
+#include "utils.h"
 
 // A map of music_tracks to filenames
 struct music_key {
