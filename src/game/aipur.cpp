@@ -33,6 +33,7 @@
 #include "display/palettized_surface.h"
 
 #include "Buzz_inc.h"
+#include "data.h"
 #include "draw.h"
 #include "game_main.h"
 #include "gr.h"
