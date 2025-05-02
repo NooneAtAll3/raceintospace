@@ -62,7 +62,7 @@ RosterGroup& Roster::getGroup(int player, int group_number)
     assert(false);
 }
 
-Roster Roster::load(const std::string filename_str)
+Roster Roster::load(const std::string& filename_str)
 {
     std::string path = locate_file(filename_str.c_str(), FT_DATA);
     assert(!path.empty());
