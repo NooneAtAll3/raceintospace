@@ -39,10 +39,6 @@ RosterGroup::RosterGroup(int player, int group_number, const Json::Value &json_o
     }
 }
 
-RosterGroup::~RosterGroup()
-{
-}
-
 const roster_entries_t &RosterGroup::getRosterEntries(bool include_females) const
 {
     if (include_females) {
