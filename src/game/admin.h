@@ -2,7 +2,7 @@
 #define ADMIN_H
 
 #include <stdint.h>
-
+okokok
 void Admin(char plr);
 void CacheCrewFile();
 void FileAccess(char mode);
