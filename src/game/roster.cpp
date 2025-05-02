@@ -4,7 +4,6 @@
 #include <cstdlib>
 #include <fstream>
 
-#include <boost/foreach.hpp>
 #include <json/json.h>
 
 #include "fs.h"
@@ -50,13 +49,9 @@ Roster::Roster(std::istream &input_stream)
     }
 }
 
-Roster::~Roster()
+RosterGroup& Roster::getGroup(int player, int group_number)
 {
-}
-
-RosterGroup &Roster::getGroup(int player, int group_number)
-{
-    BOOST_FOREACH(RosterGroup & roster_group, m_groups) {
+    for(RosterGroup& roster_group : m_groups) {
         if (roster_group.getPlayer() == player && roster_group.getGroupNumber() == group_number) {
             return roster_group;
         }
