@@ -44,6 +44,7 @@
 #include "ast1.h"
 #include "Buzz_inc.h"
 #include "budget.h"
+#include "button_interaction.h"
 #include "draw.h"
 #include "filesystem.h"
 #include "future.h"
@@ -463,29 +464,46 @@ void FileAccess(char mode)
         draw_down_arrow_highlight(194, 94);
     }
 
+    std::vector<Interaction> buttons {
+        {{209,278},{50,58},'L'},  // Load,
+        {{209,278},{64,72},'S'},  // Save
+        {{209,278},{78,86},'M'},  // Mail Save
+        {{209,278},{92,100},'D'}, // Delete
+        {{209,278},{106,114},'P'},// Play
+        {{},{},K_ESCAPE},         // alternative button for Play
+        {{209,278},{120,128},'Q'}, // Quit
+        {{191,202},{50,87},UP_ARROW}, // Arrow Up
+        {{},{},K_HOME},           // Top of the list
+        {{},{},K_PGUP},           // Page Up
+        {{},{},K_PGDN},           // Page Down
+        {{},{},K_END},            // End of the list
+        {{191,202},{89,126},DN_ARROW} // Arrow Down
+    };
+    for (int i=0; i < std::min(9,savegames.size()); ++i)
+    {
+        buttons.push_back({{40,188},{53 + i * 8, 59 + i * 8}}) // direct save selection
+    }
+
     while (!done) {
-        GetMouse();
-
-        for (i = 0; i < 9; i++) {
+        switch(int press = CheckInteraction(buttons))
+        {
+        case 13: case 14: case 15: case 16: case 17: case 18: case 19: case 20: case 21:
             // Right Select Box
-            if (x >= 40 && y >= (53 + i * 8) && x <= 188 && y <= (59 + i * 8) 
-            && mousebuttons > 0 && (now - BarB + i) <= (savegames.size() - 1)) {
-                now -= BarB;
-                now += i;
-                BarB = i;
-                DrawFiles(now, BarB, savegames);
+            now -= BarB;
+            now += (press - 13);
+            BarB = (press - 13);
+            DrawFiles(now, BarB, savegames);
 
-                if (!savegames.empty()) {
-                    FileText(&savegames[now].Name[0]);
-                }
-                
-                WaitForMouseUp();
+            if (!savegames.empty()) {
+                FileText(&savegames[now].Name[0]);
             }
-        }
-
-        if ((sc == 0 || sc == 2) && !savegames.empty() && ((x >= 209 && y >= 50 && x <= 278 && y <= 58 && mousebuttons > 0)
-                || (key == 'L'))) {
+                
+            WaitForMouseUp();
+            break;
+        case 0:
             // LOAD
+            if (savefiles.empty()) break;
+            if (sc != 0 && sc != 2) break;
             InBox(209, 50, 278, 58);
             delay(250);
 
@@ -505,10 +523,11 @@ void FileAccess(char mode)
 
             OutBox(209, 50, 278, 58);  // Button Out
             key = 0;
-
-        } else if ((sc == 0 || sc == 2) && mode == 0
-                   && ((x >= 209 && y >= 64 && x <= 278 && y <= 72 && mousebuttons > 0)
-                       || (key == 'S'))) {
+            break;
+        case 1:
+            // Save
+            if (sc != 0 && sc != 2) break;
+            if (mode == 0) break;
             InBox(209, 64, 278, 72);
             delay(250);
             WaitForMouseUp();
@@ -516,8 +535,11 @@ void FileAccess(char mode)
             done = !SaveGame(savegames);
             OutBox(209, 64, 278, 72);
             key = 0;
-        } else if (sc == 1 && mode == 0 && ((x >= 209 && y >= 78 && x <= 278 && y <= 86 && mousebuttons > 0)
-                                            || (key == 'M'))) {  // PLAY-BY-MAIL SAVE GAME
+            break;
+        case 2:
+            // PLAY-BY-MAIL SAVE GAME
+            if (sc != 1) break;
+            if (mode != 0) break; 
             InBox(209, 78, 278, 86);
             delay(250);
             WaitForMouseUp();
@@ -529,17 +551,16 @@ void FileAccess(char mode)
             if (QUIT) {
                 return;
             }
-        } else if (savegames.size() > 0 && ((x >= 209 && y >= 92 && x <= 278 && y <= 100 && mousebuttons > 0)
-                                            || (key == 'D'))) {
+            break;
+        case 3:
+            // Delete
+            if (savegames.empty()) break;
             InBox(209, 92, 278, 100);
             delay(250);
             WaitForMouseUp();
             OutBox(209, 92, 278, 100);
             // perform delete
-            i = RequestX("DELETE FILE", 1);
-
-            if (i == 1) {
-
+            if (RequestX("DELETE FILE", 1) == 1) {
                 remove_savedat(savegames[now].Name);
                 savegames.erase(savegames.begin() + now);
                 // TODO: Preserve positioning
@@ -560,35 +581,35 @@ void FileAccess(char mode)
                 }
 
             }
-
-            key = 0;
-        } else if ((x >= 209 && y >= 106 && x <= 278 && y <= 114 && mousebuttons > 0) || (key == 'P') || key == K_ESCAPE) {
+            break;
+        case 4: case 5:
+            // Play (returns back to where the menu was called from)
             InBox(209, 106, 278, 114);
             delay(250);
             WaitForMouseUp();
             OutBox(209, 106, 278, 114);
-            key = 0;
             done = 1;
-        } else if ((x >= 209 && y >= 120 && x <= 278 && y <= 128 && mousebuttons > 0) || (key == 'Q')) {
+            break;
+        case 6:
+            // Quit (to main menu)
             InBox(209, 120, 278, 128);
             delay(250);
             WaitForMouseUp();
             OutBox(209, 120, 278, 128);
             // perform quit
-            i = RequestX("QUIT", 1);
+            if (RequestX("QUIT", 1) == 1)
+            {
+                if (Option != -1) {
+                    // Modem Play => reset the modem
+                    DoModem(2);
+                }
 
-            // Modem Play => reset the modem
-            if (Option != -1 && i == 1) {
-                DoModem(2);
-            }
-
-            if (i == 1) {
                 MAIL = Option = -1;
                 QUIT = done = 1;
             }
-
-            key = 0;
-        } else if ((x >= 191 && y >= 50 && x <= 202 && y <= 87 && mousebuttons > 0) || key == UP_ARROW) {
+            break;
+        case 7:
+            // Arrow Up
             InBox(191, 50, 202, 87);
 
             if (BarB == 0) {
@@ -617,11 +638,9 @@ void FileAccess(char mode)
                 draw_down_arrow_highlight(194, 94);
             }
 
-            // perform Up Button
-            key = 0;
-
-        } else if (key == K_HOME) {  // Top of list
-
+            break;
+        case 8:
+            // Home button, Top of the list
             now = 0;
             BarB = 0;
             DrawFiles(now, BarB, savegames);
@@ -634,10 +653,9 @@ void FileAccess(char mode)
             }
 
             draw_up_arrow(194, 55);
-            key = 0;
-
-        } else if (key == K_PGUP) {  // Page Up
-
+            break;
+        case 9:
+            // Page Up
             if (now > 0) {
                 now -= 8;
                 BarB = 0;
@@ -659,8 +677,6 @@ void FileAccess(char mode)
                 draw_down_arrow(194, 94);
             }
 
-            // perform Up Button
-            key = 0;
 
             if (savegames.size() <= now + (8 - BarB)) {
                 draw_down_arrow(194, 94);
@@ -669,9 +685,9 @@ void FileAccess(char mode)
             if (savegames.size() > now + (8 - BarB)) {
                 draw_down_arrow_highlight(194, 94);
             }
-
-        } else if (key == K_PGDN) {  // Page Down
-
+            break;
+        case 10:
+            // Page Down
             if (now < savegames.size()) {
                 now += 8;
             }
@@ -715,18 +731,12 @@ void FileAccess(char mode)
 
             DrawFiles(now, BarB, savegames);
             FileText(&savegames[now].Name[0]);
-
-            key = 0;
-
-        } else if (key == K_END) {  // End of list
+            break;
+        case 11:
+            //End button, End of list
 
             now = savegames.size() - 1;
-
-            BarB = 8;
-
-            if (BarB > savegames.size() - 1) {
-                BarB = savegames.size() - 1;
-            }
+            BarB = std::max(savegames.size() - 1, 8);
 
             if (savegames.size() > 8) {
                 draw_up_arrow_highlight(194, 55);
@@ -737,10 +747,11 @@ void FileAccess(char mode)
             draw_down_arrow(194, 94);
             DrawFiles(now, BarB, savegames);
             FileText(&savegames[now].Name[0]);
-
-            key = 0;
-
-        } else if ((x >= 191 && y >= 89 && x <= 202 && y <= 126 && mousebuttons > 0) || key == DN_ARROW) {
+            break;
+        case 12:
+            // Arrow Down
+            if (savegames.empty()) break;
+            if (now == savegames.size() - 1) break;
             InBox(191, 89, 202, 126);
 
             if (BarB == 8) {
@@ -759,12 +770,8 @@ void FileAccess(char mode)
                 FileText(&savegames[now].Name[0]);
             }
 
-
             // WaitForMouseUp();
             OutBox(191, 89, 202, 126);
-
-            // perform Down Button
-            key = 0;
 
             if (BarB - now > 0) {
                 draw_up_arrow_highlight(194, 55);
