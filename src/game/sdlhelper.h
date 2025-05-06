@@ -34,6 +34,7 @@ void play(struct audio_chunk *cp, int channel);
 int bioskey(bool peek);
 bool is_new_key_available();
 int pressed_key();
+void purge_key_buffer();
 
 extern int av_mouse_cur_x;
 extern int av_mouse_cur_y;
