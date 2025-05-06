@@ -142,7 +142,7 @@ Replay(char plr, int num, int dx, int dy, int width, int height,
                     break;
                 }
 
-                if ((pressed = pressed_key()) || grGetMouseButtons()) {
+                if ((pressed = get_pressed_key()) || grGetMouseButtons()) {
                     keep_going = false;
 
                     if (pressed == K_ESCAPE) {
