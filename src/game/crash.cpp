@@ -102,7 +102,7 @@ void pretty_crash(const std::string &title, const std::string &message)
     while (!(key == K_ENTER || key == K_ESCAPE || key == K_SPACE)) {
         av_block();
         gr_sync();
-        key = bioskey(0);
+        key = pressed_key();
     }
 
     // exit with an error code
@@ -119,7 +119,7 @@ void ugly_crash(const std::string &title, const std::string &message)
     fflush(stderr);
     abort();
 }
-#endif
+#endifbios
 
 // Display a fatal error message and terminate when it's dismissed
 void crash(const std::string &title, const std::string &message)
