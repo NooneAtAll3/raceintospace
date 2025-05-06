@@ -457,20 +457,37 @@ av_block(void)
     }
 }
 
-// Outputs pressed buttons
+// Checks ring buffer if there is anything in it
+// false negatives are possible, but aren't important
+bool is_new_key_available()
+{
+	av_step();
+	return keybuf_in_idx != keybuf_out_idx;
+}
+
+// Returns pressed key from ring buffer
+// or 0 if buffer is empty (false negatives are possible, but aren't important)
+int pressed_key()
+{
+    av_step();
+    if (keybuf_in_idx == keybuf_out_idx) {
+        return (0);
+    }
+
+	int c = keybuf[keybuf_out_idx];
+    keybuf_out_idx = (keybuf_out_idx + 1) % KEYBUF_SIZE;
+
+    return c;
+}
+
+// Outputs pressed button from the buffer
 // with peek == true, only returns whether key is pressed or not
 // otherwise, returns full info
 int bioskey(bool peek)
 {
+	if (peek) return is_new_key_available();
+	
     av_step();
-
-    if (peek) {
-        if (keybuf_in_idx != keybuf_out_idx) {
-            return (1);
-        }
-
-        return (0);
-    }
 
     if (keybuf_in_idx == keybuf_out_idx) {
         return (0);
