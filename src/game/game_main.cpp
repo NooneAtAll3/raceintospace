@@ -888,7 +888,7 @@ void GetMouse_fast(void)
     }
 
     while (is_new_key_available()) {
-        key = pressed_key();
+        key = get_pressed_key();
 
         if ((key & 0x00ff) > 0) {
             key = toupper(key & 0xff);
