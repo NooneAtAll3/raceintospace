@@ -503,7 +503,7 @@ void PlaySequence(char plr, int step, const char *InSeq, char mode)
                     sts = 0;
                 }
 
-                if (pressed_key() || grGetMouseButtons()) {
+                if (get_pressed_key() || grGetMouseButtons()) {
                     av_silence(AV_SOUND_CHANNEL);
                     keep_going = 0;
                 }
@@ -533,7 +533,7 @@ void PlaySequence(char plr, int step, const char *InSeq, char mode)
                 keep_going = 0;
             }
 
-            if (pressed_key() || grGetMouseButtons()) {
+            if (get_pressed_key() || grGetMouseButtons()) {
                 av_silence(AV_SOUND_CHANNEL);
                 keep_going = 0;
             }
