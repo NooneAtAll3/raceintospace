@@ -457,11 +457,11 @@ av_block(void)
     }
 }
 
-int
-bioskey(int peek)
+// Outputs pressed buttons
+// with peek == true, only returns whether key is pressed or not
+// otherwise, returns full info
+int bioskey(bool peek)
 {
-    int c;
-
     av_step();
 
     if (peek) {
@@ -476,7 +476,7 @@ bioskey(int peek)
         return (0);
     }
 
-    c = keybuf[keybuf_out_idx];
+    int c = keybuf[keybuf_out_idx];
     keybuf_out_idx = (keybuf_out_idx + 1) % KEYBUF_SIZE;
 
     return (c);
