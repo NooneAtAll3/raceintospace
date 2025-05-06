@@ -467,7 +467,7 @@ bool is_new_key_available()
 
 // Returns pressed key from ring buffer
 // or 0 if buffer is empty (false negatives are possible, but aren't important)
-int pressed_key()
+int get_pressed_key()
 {
     if (!is_new_key_available()) {
         return 0;
