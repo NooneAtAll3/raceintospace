@@ -469,15 +469,21 @@ bool is_new_key_available()
 // or 0 if buffer is empty (false negatives are possible, but aren't important)
 int pressed_key()
 {
-    av_step();
-    if (keybuf_in_idx == keybuf_out_idx) {
-        return (0);
+    if (!is_new_key_available()) {
+        return 0;
     }
 
 	int c = keybuf[keybuf_out_idx];
     keybuf_out_idx = (keybuf_out_idx + 1) % KEYBUF_SIZE;
 
     return c;
+}
+
+// Removes all keys from SDL or ring buffer
+void purge_key_buffer()
+{
+	av_step();
+	keybuf_out_idx = keybuf_in_idx;
 }
 
 // Outputs pressed button from the buffer
