@@ -119,7 +119,7 @@ void ugly_crash(const std::string &title, const std::string &message)
     fflush(stderr);
     abort();
 }
-#endifbios
+#endif
 
 // Display a fatal error message and terminate when it's dismissed
 void crash(const std::string &title, const std::string &message)
