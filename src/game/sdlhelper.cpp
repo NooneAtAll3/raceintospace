@@ -486,25 +486,6 @@ void purge_key_buffer()
 	keybuf_out_idx = keybuf_in_idx;
 }
 
-// Outputs pressed button from the buffer
-// with peek == true, only returns whether key is pressed or not
-// otherwise, returns full info
-int bioskey(bool peek)
-{
-	if (peek) return is_new_key_available();
-	
-    av_step();
-
-    if (keybuf_in_idx == keybuf_out_idx) {
-        return (0);
-    }
-
-    int c = keybuf[keybuf_out_idx];
-    keybuf_out_idx = (keybuf_out_idx + 1) % KEYBUF_SIZE;
-
-    return (c);
-}
-
 void
 UpdateAudio(void)
 {
