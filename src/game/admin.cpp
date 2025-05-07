@@ -1155,8 +1155,7 @@ void FileText(const char *name)
  */
 int FutureCheck(char plr, char type)
 {
-    int i;
-    int ii;
+    assert(type == 0 || type == 1);
     int xx;
     int yy;
     int pad;
@@ -1164,17 +1163,14 @@ int FutureCheck(char plr, char type)
     int m[3];
     int t = 0;
     int tx[3] = {0, 0, 0};
-    for (i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {
         p[i] = Data->P[plr].LaunchFacility[i];
         PadPurchase[i] = 0;
 
         if (type == 0) {
             m[i] = Data->P[plr].Future[i].MissionCode;
-        } else if (type == 1) {
+        } else (type == 1) {
             m[i] = (Data->P[plr].Mission[i].Hard[4] > 0) ? 1 : 0;
-        } else {
-            // only types 0 and 1 are valid
-            assert(false);
         }
     }
 
@@ -1215,7 +1211,7 @@ int FutureCheck(char plr, char type)
 
     draw_string(0, 0, "LAUNCH SELECTION");
 
-    for (i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {
         InBox(64, 35 + 51 * i, 104, 66 + 51 * i);
         InBox(64, 69 + 51 * i, 104, 79 + 51 * i);
         InBox(108, 35 + 51 * i, 264, 64 + 51 * i);
@@ -1409,7 +1405,7 @@ int FutureCheck(char plr, char type)
             key = 0;
         }
 
-        for (i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             if ((x >= 110 && y >= 69 + i * 51 && x <= 262 && y <= 77 + i * 51 && tx[i] != 1 && mousebuttons > 0) 
               || (tx[i] != 1 && key == 'A' + i)) {
                 InBox(110, 69 + i * 51, 262, 77 + i * 51);  // Open Future Missions
@@ -1441,7 +1437,7 @@ int FutureCheck(char plr, char type)
                     PadPurchase[i] = 1;
 
                     // Update player's cash shown on other pads
-                    for (ii = 0; ii < 3; ii++) {
+                    for (int ii = 0; ii < 3; ii++) {
                         display::graphics.setForegroundColor(9);
 
                         if (ii != i && p[ii] > 1) {
@@ -1494,7 +1490,7 @@ int FutureCheck(char plr, char type)
                     draw_string(113, 75 + i * 51, "ASSIGN FUTURE MISSION");
 
                     // Update player's cash shown on other pads
-                    for (ii = 0; ii < 3; ii++) {
+                    for (int ii = 0; ii < 3; ii++) {
                         display::graphics.setForegroundColor(9);
 
                         if (ii != i && p[ii] > 1) {
@@ -1560,7 +1556,7 @@ int FutureCheck(char plr, char type)
             draw_string(113, 75 + i * 51, "PURCHASE FACILITY");
 
                 // Update player's cash shown on other pads
-                for (ii = 0; ii < 3; ii++) {
+                for (int ii = 0; ii < 3; ii++) {
                     display::graphics.setForegroundColor(9);
 
                     if (ii != i && p[ii] > 1) {
