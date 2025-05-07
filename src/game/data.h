@@ -610,7 +610,8 @@ struct PastInfo {
 enum LaunchFacility_Status : int8_t {
     LAUNCHPAD_NOT_BUILT = -1,
     LAUNCHPAD_OPERATIONAL = 1, // value above 1 expresses cost of repair
-    LAUNCHPAD_DESTROYED_MARGIN = 5 // value at or above this classifies pad as destroyed, rather than damaged
+    LAUNCHPAD_CONSTRUCTION_COST = 20,
+    LAUNCHPAD_DESTROYED_MARGIN = 20 // value at or above this classifies pad as destroyed, rather than damaged
 };
 
 struct BuzzData {                   // master data list for Buzz Aldrin's
