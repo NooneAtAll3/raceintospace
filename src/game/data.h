@@ -609,9 +609,9 @@ struct PastInfo {
 
 enum LaunchFacility_Status : int8_t {
     LAUNCHPAD_NOT_BUILT = -1,
+    LAUNCHPAD_CONSTRUCTION_COST = 20,
     LAUNCHPAD_OPERATIONAL = 1,
     LAUNCHPAD_DAMAGED_MARGIN = 2, // value at or above this classifies pad as damaged
-    LAUNCHPAD_CONSTRUCTION_COST = 20,
     LAUNCHPAD_DESTROYED_MARGIN = 20 // value at or above this classifies pad as destroyed
 };
 
