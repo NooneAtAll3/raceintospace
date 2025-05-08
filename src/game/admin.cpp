@@ -1485,7 +1485,7 @@ int FutureCheck(char plr, char type)
                     draw_string(113, 75 + i * 51, "ASSIGN FUTURE MISSION");
 
                     // Update player's cash shown on other pads
-                    for (int ii = 0; ii < [MAX_LAUNCHPADS]; ii++) {
+                    for (int ii = 0; ii < MAX_LAUNCHPADS; ii++) {
                         display::graphics.setForegroundColor(9);
 
                         if (ii != i && p[ii] >= LAUNCHPAD_DAMAGED_MARGIN) {
