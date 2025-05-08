@@ -120,7 +120,6 @@
 #define MAX_SELECTION               30
 /*@}*/
 
-#define
 
 
 #pragma pack(push, 1)
