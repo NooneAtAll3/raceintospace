@@ -1168,7 +1168,7 @@ int FutureCheck(char plr, char type)
 
         if (type == 0) {
             m[i] = Data->P[plr].Future[i].MissionCode;
-        } else (type == 1) {
+        } else {
             m[i] = (Data->P[plr].Mission[i].Hard[4] > 0) ? 1 : 0;
         }
     }
